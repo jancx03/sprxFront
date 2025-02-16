@@ -71,7 +71,6 @@ const SearchForm: FC<SearchFormProps> = ({
   }
 
   return (
-    // We wrap the main input + search button in a form
     <form
       onSubmit={handleSearchClick}
       className="flex flex-col md:flex-row gap-4 items-center"
@@ -87,7 +86,6 @@ const SearchForm: FC<SearchFormProps> = ({
         />
       </div>
 
-      {/* Buttons row */}
       <div className="flex gap-2">
         {/* Sheet for advanced filters */}
         <Sheet open={open} onOpenChange={setOpen}>

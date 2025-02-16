@@ -44,7 +44,6 @@ const ScaledIngredients: FC<ScaledIngredientsProps> = ({
         <label className="text-sm text-gray-400" htmlFor="desiredServings">
           Desired Servings:
         </label>
-        {/* Use a shadcn/ui Input with dark styling */}
         <Input
           id="desiredServings"
           type="number"

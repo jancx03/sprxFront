@@ -41,7 +41,6 @@ const CalorieCalculator: FC<CalorieCalculatorProps> = ({
         <label className="text-sm text-gray-400" htmlFor="desiredServings">
           Desired Servings:
         </label>
-        {/* Use a dark-themed Input for better visibility */}
         <Input
           id="desiredServings"
           type="number"
