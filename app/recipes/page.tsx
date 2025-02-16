@@ -43,7 +43,7 @@ export default async function RecipesPage(props: RecipesPageProps) {
     ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
     : "http://localhost:3000"; // fallback for local dev
   const res = await fetch(
-    `${domain}/api/proxy?endpoint=recipes&query=${query}`,
+    `https://sprx-front.vercel.app/api/proxy?endpoint=recipes&query=${query}`,
     {
       cache: "no-store",
     }

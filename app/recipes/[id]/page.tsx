@@ -41,9 +41,12 @@ export default async function RecipeDetailPage({
   const domain = process.env.NEXT_PUBLIC_VERCEL_URL
     ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
     : "http://localhost:3000"; // fallback for local dev
-  const res = await fetch(`${domain}/api/proxy?endpoint=recipes&id=${id}`, {
-    cache: "no-store",
-  });
+  const res = await fetch(
+    `https://sprx-front.vercel.app/api/proxy?endpoint=recipes&id=${id}`,
+    {
+      cache: "no-store",
+    }
+  );
 
   if (!res.ok) {
     throw new Error("Failed to fetch recipe detail");

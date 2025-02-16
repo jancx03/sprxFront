@@ -42,7 +42,7 @@ export default function FavoritesPage() {
       const fetched: Recipe[] = [];
       for (const id of favoriteIds) {
         const res = await fetch(
-          `${domain}/api/proxy?endpoint=recipes&id=${id}`
+          `https://sprx-front.vercel.app/api/proxy?endpoint=recipes&id=${id}`
         );
         if (res.ok) {
           const data: Recipe = await res.json();

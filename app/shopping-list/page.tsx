@@ -59,7 +59,7 @@ export default function ShoppingListPage() {
 
         for (const id of selectedRecipes) {
           const res = await fetch(
-            `${domain}/api/proxy?endpoint=recipes&id=${id}`
+            `https://sprx-front.vercel.app/api/proxy?endpoint=recipes&id=${id}`
           );
 
           if (!res.ok) continue;
