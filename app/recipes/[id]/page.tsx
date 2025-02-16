@@ -41,7 +41,7 @@ interface RecipeDetailPageProps {
 export default async function RecipeDetailPage({
   params,
 }: RecipeDetailPageProps) {
-  const { id } = params;
+  const { id } = await params;
 
   const res = await fetch(`http://localhost:8080/api/recipes/${id}`, {
     cache: "no-store",

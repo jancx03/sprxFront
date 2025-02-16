@@ -65,12 +65,17 @@ const SearchForm: FC<SearchFormProps> = ({
   }
 
   function handleSearchClick(e?: FormEvent) {
+    // If triggered by form submit, prevent default page reload
     if (e) e.preventDefault();
     doSearch();
   }
 
   return (
-    <div className="flex flex-col md:flex-row gap-4 items-center">
+    // We wrap the main input + search button in a form
+    <form
+      onSubmit={handleSearchClick}
+      className="flex flex-col md:flex-row gap-4 items-center"
+    >
       {/* MAIN TEXT INPUT for "Search by recipe name" */}
       <div className="flex-1 relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-4 w-4" />
@@ -135,7 +140,6 @@ const SearchForm: FC<SearchFormProps> = ({
                   <SelectTrigger className="bg-gray-700/50 border-gray-600 text-white">
                     <SelectValue placeholder="Any Diet" />
                   </SelectTrigger>
-                  {/* White dropdown override */}
                   <SelectContent className="bg-white text-black">
                     <SelectItem
                       value="any"
@@ -227,7 +231,8 @@ const SearchForm: FC<SearchFormProps> = ({
 
               {/* Apply Filters button */}
               <Button
-                className="w-full"
+                variant="outline"
+                className="w-full border border-gray-600 text-white hover:bg-gray-700 font-semibold"
                 onClick={() => {
                   setOpen(false);
                   doSearch();
@@ -240,9 +245,9 @@ const SearchForm: FC<SearchFormProps> = ({
         </Sheet>
 
         {/* MAIN SEARCH button */}
-        <Button onClick={handleSearchClick}>Search</Button>
+        <Button type="submit">Search</Button>
       </div>
-    </div>
+    </form>
   );
 };
 
