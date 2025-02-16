@@ -50,12 +50,17 @@ export default function ShoppingListPage() {
 
     async function fetchAndCombine() {
       setLoading(true);
+      const domain = process.env.NEXT_PUBLIC_VERCEL_URL
+        ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+        : "http://localhost:3000"; // fallback for local dev
       try {
         const allIngs: FetchedRecipe["ingredients"] = [];
         const allTitles: string[] = [];
 
         for (const id of selectedRecipes) {
-          const res = await fetch(`/api/proxy?endpoint=recipes&id=${id}`);
+          const res = await fetch(
+            `${domain}/api/proxy?endpoint=recipes&id=${id}`
+          );
 
           if (!res.ok) continue;
 

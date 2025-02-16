@@ -38,7 +38,10 @@ export default async function RecipeDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const res = await fetch(`/api/proxy?endpoint=recipes&id=${id}`, {
+  const domain = process.env.NEXT_PUBLIC_VERCEL_URL
+    ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+    : "http://localhost:3000"; // fallback for local dev
+  const res = await fetch(`${domain}/api/proxy?endpoint=recipes&id=${id}`, {
     cache: "no-store",
   });
 

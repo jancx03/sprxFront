@@ -35,9 +35,15 @@ export default function FavoritesPage() {
         return;
       }
 
+      const domain = process.env.NEXT_PUBLIC_VERCEL_URL
+        ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+        : "http://localhost:3000"; // fallback for local dev
+
       const fetched: Recipe[] = [];
       for (const id of favoriteIds) {
-        const res = await fetch(`/api/proxy?endpoint=recipes&id=${id}`);
+        const res = await fetch(
+          `${domain}/api/proxy?endpoint=recipes&id=${id}`
+        );
         if (res.ok) {
           const data: Recipe = await res.json();
           fetched.push(data);

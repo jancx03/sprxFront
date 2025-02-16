@@ -39,9 +39,15 @@ export default async function RecipesPage(props: RecipesPageProps) {
   if (dietary) query.set("dietary", dietary);
   if (sort) query.set("sort", sort);
 
-  const res = await fetch(`/api/proxy?endpoint=recipes&query=${query}`, {
-    cache: "no-store",
-  });
+  const domain = process.env.NEXT_PUBLIC_VERCEL_URL
+    ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+    : "http://localhost:3000"; // fallback for local dev
+  const res = await fetch(
+    `${domain}/api/proxy?endpoint=recipes&query=${query}`,
+    {
+      cache: "no-store",
+    }
+  );
 
   if (!res.ok) {
     throw new Error("Failed to fetch recipes");
