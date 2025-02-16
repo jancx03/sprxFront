@@ -28,7 +28,6 @@ export default function FavoritesPage() {
     }
   }, []);
 
-  // Whenever favoriteIds changes, fetch each recipe from our backend
   useEffect(() => {
     async function fetchFavorites() {
       if (favoriteIds.length === 0) {
@@ -38,7 +37,7 @@ export default function FavoritesPage() {
 
       const fetched: Recipe[] = [];
       for (const id of favoriteIds) {
-        const res = await fetch(`http://88.80.187.193:8080/api/recipes/${id}`);
+        const res = await fetch(`/api/proxy?endpoint=recipes&id=${id}`);
         if (res.ok) {
           const data: Recipe = await res.json();
           fetched.push(data);

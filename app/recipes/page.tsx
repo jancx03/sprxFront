@@ -39,7 +39,7 @@ export default async function RecipesPage(props: RecipesPageProps) {
   if (dietary) query.set("dietary", dietary);
   if (sort) query.set("sort", sort);
 
-  const res = await fetch(`http://88.80.187.193:8080/api/recipes?${query}`, {
+  const res = await fetch(`/api/proxy?endpoint=recipes&query=${query}`, {
     cache: "no-store",
   });
 

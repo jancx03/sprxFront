@@ -38,9 +38,10 @@ export default async function RecipeDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const res = await fetch(`http://88.80.187.193:8080/api/recipes/${id}`, {
+  const res = await fetch(`/api/proxy?endpoint=recipes&id=${id}`, {
     cache: "no-store",
   });
+
   if (!res.ok) {
     throw new Error("Failed to fetch recipe detail");
   }
