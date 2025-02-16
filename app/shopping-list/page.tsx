@@ -1,8 +1,18 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { useShoppingList } from "../context/ShoppingListContext";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
-// Example: minimal shape of a fetched recipe
+// Minimal shape of fetched recipe from your API
 interface FetchedRecipe {
   id: string;
   title: string;
@@ -10,11 +20,11 @@ interface FetchedRecipe {
     ingredientId: string;
     name?: string;
     unit?: string;
-    amount: string; // stored as string in the API
+    amount: string; // numeric string
   }>;
 }
 
-// Shape of combined ingredient in final list
+// Combined ingredient shape
 interface CombinedIngredient {
   ingredientId: string;
   name: string;
@@ -24,7 +34,6 @@ interface CombinedIngredient {
 
 export default function ShoppingListPage() {
   const { selectedRecipes, clearList } = useShoppingList();
-
   const [combinedIngredients, setCombinedIngredients] = useState<
     CombinedIngredient[]
   >([]);
@@ -34,7 +43,6 @@ export default function ShoppingListPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // If no recipes selected, reset everything
     if (selectedRecipes.length === 0) {
       setCombinedIngredients([]);
       setSelectedRecipeTitles([]);
@@ -43,28 +51,22 @@ export default function ShoppingListPage() {
 
     async function fetchAndCombine() {
       setLoading(true);
-
       try {
         const allIngs: FetchedRecipe["ingredients"] = [];
         const allTitles: string[] = [];
 
-        // 1) For each selected recipe ID, fetch the recipe data
         for (const id of selectedRecipes) {
           const res = await fetch(`http://localhost:8080/api/recipes/${id}`);
           if (!res.ok) continue;
 
           const recipe: FetchedRecipe = await res.json();
-
-          // Collect the recipe title
           allTitles.push(recipe.title);
-
-          // Collect all ingredients
           allIngs.push(...recipe.ingredients);
         }
 
         setSelectedRecipeTitles(allTitles);
 
-        // 2) Merge duplicates by (ingredientId + unit)
+        // Merge duplicates by (ingredientId + unit)
         const merged: Record<string, CombinedIngredient> = {};
 
         for (const ing of allIngs) {
@@ -94,27 +96,75 @@ export default function ShoppingListPage() {
   }, [selectedRecipes]);
 
   return (
-    <div style={{ padding: "1rem" }}>
-      <h1>Shopping List</h1>
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white p-6">
+      <div className="max-w-3xl mx-auto space-y-6">
+        <header className="space-y-2">
+          <h1 className="text-3xl font-bold tracking-tight">Shopping List</h1>
+          <p className="text-gray-400">
+            Your merged ingredients from selected recipes
+          </p>
+        </header>
 
-      {selectedRecipes.length === 0 ? (
-        <p>No recipes selected.</p>
-      ) : loading ? (
-        <p>Loading...</p>
-      ) : (
-        <>
-          <p>Recipes Selected: {selectedRecipeTitles.join(", ")}</p>
-          <button onClick={clearList}>Clear Shopping List</button>
+        {selectedRecipes.length === 0 ? (
+          <div className="space-y-2">
+            <p className="text-gray-400">No recipes selected.</p>
+          </div>
+        ) : loading ? (
+          <p className="text-gray-400">Loading...</p>
+        ) : (
+          <>
+            {/* Card for selected recipes + Clear button */}
+            <Card className="bg-gray-800/50 border-gray-700">
+              <CardHeader>
+                <CardTitle className="text-lg">Recipes Selected</CardTitle>
+                <CardDescription>
+                  You have selected {selectedRecipes.length} recipe(s)
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <div className="flex flex-wrap gap-2">
+                  {selectedRecipeTitles.map((title, idx) => (
+                    <Badge
+                      key={idx}
+                      variant="secondary"
+                      className="bg-gray-700/50"
+                    >
+                      {title}
+                    </Badge>
+                  ))}
+                </div>
+                <div className="flex gap-2 mt-2">
+                  <Button variant="outline" onClick={clearList}>
+                    Clear Shopping List
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
 
-          <ul style={{ marginTop: "1rem" }}>
-            {combinedIngredients.map((ing, idx) => (
-              <li key={idx}>
-                {ing.name}: {ing.amount.toFixed(2)} {ing.unit}
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
+            {/* Card for merged ingredients */}
+            <Card className="bg-gray-800/50 border-gray-700">
+              <CardHeader>
+                <CardTitle className="text-lg">Combined Ingredients</CardTitle>
+                <CardDescription>All ingredients</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {combinedIngredients.length === 0 ? (
+                  <p className="text-gray-400">No ingredients found.</p>
+                ) : (
+                  <ul className="list-disc list-inside space-y-2 text-sm text-gray-200">
+                    {combinedIngredients.map((ing, idx) => (
+                      <li key={idx}>
+                        <strong>{ing.name}:</strong> {ing.amount.toFixed(2)}{" "}
+                        {ing.unit}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </CardContent>
+            </Card>
+          </>
+        )}
+      </div>
     </div>
   );
 }

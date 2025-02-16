@@ -1,5 +1,7 @@
 "use client";
-import { useState, FC, ChangeEvent } from "react";
+
+import { FC, ChangeEvent, useState } from "react";
+import { Input } from "@/components/ui/input";
 
 interface Ingredient {
   name: string;
@@ -19,9 +21,10 @@ const ScaledIngredients: FC<ScaledIngredientsProps> = ({
   const [desiredServings, setDesiredServings] =
     useState<number>(originalServings);
 
+  // Scale factor
   const scale = desiredServings / originalServings;
 
-  // For each ingredient, multiply its "amount" by scale
+  // Scale each ingredient
   const scaled = ingredients.map((ing) => {
     const baseAmount = parseFloat(ing.amount) || 0;
     const scaledAmount = baseAmount * scale;
@@ -34,16 +37,28 @@ const ScaledIngredients: FC<ScaledIngredientsProps> = ({
   }
 
   return (
-    <div>
-      <h3>Scale Ingredients</h3>
-      <label>
-        Desired Servings:{" "}
-        <input type="number" value={desiredServings} onChange={handleChange} />
-      </label>
-      <ul style={{ marginTop: "1rem" }}>
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold">Scale Ingredients</h3>
+
+      <div className="flex items-center gap-2">
+        <label className="text-sm text-gray-400" htmlFor="desiredServings">
+          Desired Servings:
+        </label>
+        {/* Use a shadcn/ui Input with dark styling */}
+        <Input
+          id="desiredServings"
+          type="number"
+          value={desiredServings}
+          onChange={handleChange}
+          className="bg-gray-700/50 text-white border-gray-600 w-24"
+        />
+      </div>
+
+      <ul className="list-disc list-inside space-y-1 text-sm text-gray-200 mt-4">
         {scaled.map((ing, i) => (
           <li key={i}>
-            {ing.name}: {ing.scaledAmount.toFixed(2)} {ing.unit || ""}
+            <strong>{ing.name}:</strong> {ing.scaledAmount.toFixed(2)}{" "}
+            {ing.unit || ""}
           </li>
         ))}
       </ul>

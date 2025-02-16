@@ -1,21 +1,25 @@
 "use client";
 import { useEffect, useState } from "react";
+import { ChevronRight, Heart } from "lucide-react";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
-// Define a minimal Recipe interface based on what your API returns
 interface Recipe {
   id: string;
   title: string;
   tags?: string[];
-  // Add other fields as needed (e.g., servings, instructions, etc.)
 }
 
 export default function FavoritesPage() {
-  // We store a list of recipe IDs from localStorage
   const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
-  // We store the actual recipe objects after fetching them
   const [recipes, setRecipes] = useState<Recipe[]>([]);
 
-  // 1) On mount, read from localStorage
+  // On mount, read favorite IDs from localStorage
   useEffect(() => {
     const saved = localStorage.getItem("favorites");
     if (saved) {
@@ -24,7 +28,7 @@ export default function FavoritesPage() {
     }
   }, []);
 
-  // 2) Whenever favoriteIds changes, fetch each recipe from our backend
+  // Whenever favoriteIds changes, fetch each recipe from our backend
   useEffect(() => {
     async function fetchFavorites() {
       if (favoriteIds.length === 0) {
@@ -47,22 +51,58 @@ export default function FavoritesPage() {
   }, [favoriteIds]);
 
   return (
-    <div style={{ padding: "1rem" }}>
-      <h1>My Favorite Recipes</h1>
-      {favoriteIds.length === 0 ? (
-        <p>You have no favorites yet.</p>
-      ) : (
-        <ul>
-          {recipes.map((r) => (
-            <li key={r.id}>
-              <a href={`/recipes/${r.id}`}>
-                {r.title}
-                {r.tags && ` – ${r.tags.join(", ")}`}
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white p-6">
+      <div className="max-w-3xl mx-auto space-y-6">
+        {/* Page Header */}
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
+            <Heart className="w-6 h-6 text-red-400" fill="currentColor" />
+            My Favorite Recipes
+          </h1>
+          <p className="text-gray-400">Your saved recipes collection</p>
+        </div>
+
+        {/* Favorite Recipes List */}
+        {favoriteIds.length === 0 ? (
+          <p className="text-gray-400">You have no favorites yet.</p>
+        ) : (
+          <div className="space-y-4">
+            {recipes.map((r) => (
+              <Card
+                key={r.id}
+                className="bg-gray-800/50 border-gray-700 transition-colors hover:bg-gray-800/70 cursor-pointer group"
+              >
+                <CardHeader>
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-2">
+                      <CardTitle className="text-xl group-hover:text-primary-foreground transition-colors">
+                        {/* Link to recipe detail page */}
+                        <a href={`/recipes/${r.id}`}>{r.title}</a>
+                      </CardTitle>
+                      {r.tags && r.tags.length > 0 && (
+                        <CardDescription>
+                          <div className="flex flex-wrap gap-2">
+                            {r.tags.map((tag) => (
+                              <Badge
+                                key={tag}
+                                variant="secondary"
+                                className="bg-gray-700/50"
+                              >
+                                {tag}
+                              </Badge>
+                            ))}
+                          </div>
+                        </CardDescription>
+                      )}
+                    </div>
+                    <ChevronRight className="w-5 h-5 text-gray-500 group-hover:text-primary-foreground transition-colors" />
+                  </div>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

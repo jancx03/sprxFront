@@ -1,20 +1,18 @@
 export const dynamic = "force-dynamic";
-// app/recipes/page.tsx
+
 import SearchForm from "@/components/SearchForm";
 import RecipeList from "@/components/RecipeList";
 
-// Define the shape of searchParams
 interface RecipesPageProps {
-  searchParams?: {
+  searchParams?: Promise<{
     name?: string;
     tag?: string;
     ingredient?: string;
     dietary?: string;
     sort?: string;
-  };
+  }>;
 }
 
-// Define the shape of a basic "recipe" from the /api/recipes endpoint
 interface Recipe {
   id: string;
   title: string;
@@ -27,14 +25,13 @@ interface Recipe {
 }
 
 export default async function RecipesPage(props: RecipesPageProps) {
-  const searchParams = props.searchParams || {};
+  const searchParams = (await props.searchParams) || {};
   const name = searchParams.name;
   const tag = searchParams.tag;
   const ingredient = searchParams.ingredient;
   const dietary = searchParams.dietary;
   const sort = searchParams.sort;
 
-  // Build query string for the external API
   const query = new URLSearchParams();
   if (name) query.set("name", name);
   if (tag) query.set("tag", tag);
@@ -42,7 +39,6 @@ export default async function RecipesPage(props: RecipesPageProps) {
   if (dietary) query.set("dietary", dietary);
   if (sort) query.set("sort", sort);
 
-  // Fetch from your Express backend
   const res = await fetch(`http://localhost:8080/api/recipes?${query}`, {
     cache: "no-store",
   });
@@ -50,22 +46,29 @@ export default async function RecipesPage(props: RecipesPageProps) {
     throw new Error("Failed to fetch recipes");
   }
 
-  // Parse as an array of Recipe objects
   const recipes: Recipe[] = await res.json();
 
   return (
-    <div style={{ padding: "1rem" }}>
-      <h1>Recipes</h1>
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white p-6">
+      <div className="max-w-6xl mx-auto space-y-8">
+        <header className="space-y-2">
+          <h1 className="text-3xl font-bold tracking-tight">Recipes</h1>
+          <p className="text-gray-400">
+            Discover and manage your favorite recipes
+          </p>
+        </header>
 
-      <SearchForm
-        initialName={name}
-        initialTag={tag}
-        initialIngredient={ingredient}
-        initialDietary={dietary}
-        initialSort={sort}
-      />
+        {/* Our new SearchForm (with sheet) */}
+        <SearchForm
+          initialName={name}
+          initialTag={tag}
+          initialIngredient={ingredient}
+          initialDietary={dietary}
+          initialSort={sort}
+        />
 
-      <RecipeList recipes={recipes} />
+        <RecipeList recipes={recipes} />
+      </div>
     </div>
   );
 }

@@ -7,7 +7,6 @@ import React, {
   ReactNode,
 } from "react";
 
-// 1) Define the shape of our context value
 interface ShoppingListContextValue {
   selectedRecipes: string[];
   addRecipe: (id: string) => void;
@@ -15,17 +14,14 @@ interface ShoppingListContextValue {
   clearList: () => void;
 }
 
-// 2) Create the context with a default of undefined
 const ShoppingListContext = createContext<ShoppingListContextValue | undefined>(
   undefined
 );
 
-// 3) Define props for our provider (accepts children)
 interface ShoppingListProviderProps {
   children: ReactNode;
 }
 
-// 4) Implement the provider
 export function ShoppingListProvider({ children }: ShoppingListProviderProps) {
   const [selectedRecipes, setSelectedRecipes] = useState<string[]>([]);
 
@@ -71,7 +67,6 @@ export function ShoppingListProvider({ children }: ShoppingListProviderProps) {
   );
 }
 
-// 5) Hook to consume the context
 export function useShoppingList() {
   const context = useContext(ShoppingListContext);
   if (!context) {
