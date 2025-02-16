@@ -39,9 +39,10 @@ export default async function RecipesPage(props: RecipesPageProps) {
   if (dietary) query.set("dietary", dietary);
   if (sort) query.set("sort", sort);
 
-  const res = await fetch(`http://localhost:8080/api/recipes?${query}`, {
+  const res = await fetch(`http://88.80.187.193:8080/api/recipes?${query}`, {
     cache: "no-store",
   });
+
   if (!res.ok) {
     throw new Error("Failed to fetch recipes");
   }

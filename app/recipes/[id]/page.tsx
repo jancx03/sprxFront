@@ -43,7 +43,7 @@ export default async function RecipeDetailPage({
 }: RecipeDetailPageProps) {
   const { id } = await params;
 
-  const res = await fetch(`http://localhost:8080/api/recipes/${id}`, {
+  const res = await fetch(`http://88.80.187.193:8080/api/recipes/${id}`, {
     cache: "no-store",
   });
   if (!res.ok) {

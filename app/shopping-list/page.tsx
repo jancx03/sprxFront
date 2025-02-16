@@ -55,7 +55,9 @@ export default function ShoppingListPage() {
         const allTitles: string[] = [];
 
         for (const id of selectedRecipes) {
-          const res = await fetch(`http://localhost:8080/api/recipes/${id}`);
+          const res = await fetch(
+            `http://88.80.187.193:8080/api/recipes/${id}`
+          );
           if (!res.ok) continue;
 
           const recipe: FetchedRecipe = await res.json();

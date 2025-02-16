@@ -38,7 +38,7 @@ export default function FavoritesPage() {
 
       const fetched: Recipe[] = [];
       for (const id of favoriteIds) {
-        const res = await fetch(`http://localhost:8080/api/recipes/${id}`);
+        const res = await fetch(`http://88.80.187.193:8080/api/recipes/${id}`);
         if (res.ok) {
           const data: Recipe = await res.json();
           fetched.push(data);
