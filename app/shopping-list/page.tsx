@@ -12,7 +12,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-// Minimal shape of fetched recipe from your API
 interface FetchedRecipe {
   id: string;
   title: string;
